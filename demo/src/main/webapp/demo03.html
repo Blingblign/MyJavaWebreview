@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo03</title>
+    <script src="static/axios.js"></script>
+    <script src="static/vue.js"></script>
+
+    <script type="text/javascript">
+        window.onload = function() {
+            var vue = new Vue({
+
+                el: "#app",
+                data: {
+                    uname: "hello",
+                    pwd: "12431",
+                    msg:"Tom_1234"
+                },
+                methods: {
+                    sendAjax: function () {
+                        axios({
+                            "method":"post",
+                            "url":"axios",
+                            "params": {
+                                "uname": vue.$data.uname,
+                                "pwd": vue.$data.pwd
+                            }
+                        }).then(function(response) {
+                            vue.msg = response.data;
+                        }) .catch(function(error) {
+                            vue.msg = error.message;
+                        })
+
+                    }
+                }
+            })
+        };
+
+    </script>
+
+</head>
+<body>
+<!-- 使用{{}}格式，指定要被渲染的数据 -->
+<div id="app">{{msg}}<br/>
+    用户名：<input type="text" name="uname" v-model="uname"/>
+    密码：<input type="text" name="pwd" v-model="pwd"/>
+    <input type="button" v-on:click="sendAjax" value="发送ajax请求"/>
+    <input type="text" v-if="msg==(uname+'_'+pwd)" value="收到服务端响应"/>
+
+</div>
+
+
+
+</body>
+
+</html>
