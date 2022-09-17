@@ -2,12 +2,14 @@ package com.atguigu.myssm.myspringmvc;
 
 import com.atguigu.myssm.factory.impl.ClassPathXmlApplicationContext;
 import com.atguigu.myssm.util.StringUtil;
+import com.mysql.jdbc.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -80,18 +82,27 @@ public class DispatcherServlet extends ViewBaseServlet{
         try {
             String returnValue = (String)realMethod.invoke(beanObj,parameterValues);
             //3.视图处理 "redirect:fruit.do"
-            if (returnValue.startsWith("redirect:")) {
-                String redirectUrl = returnValue.substring("redirect:".length());
-                resp.sendRedirect(redirectUrl);
-            }else {
-                super.processTemplate(returnValue,req,resp);
+            if (StringUtils.isNullOrEmpty(returnValue)) {
+                return;
             }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+                if (returnValue.startsWith("redirect:")) {
+                    String redirectUrl = returnValue.substring("redirect:".length());
+                    resp.sendRedirect(redirectUrl);
+                }else if (returnValue.startsWith("json:")) {
+                    String jsonStr= returnValue.substring("json:".length());
+                    resp.setCharacterEncoding("UTF-8");
+                    resp.setContentType("text/json,charset=UTF-8");
+                    PrintWriter writer = resp.getWriter();
+                    writer.write(jsonStr);
+                    writer.flush();
+                }
+                else {
+                    super.processTemplate(returnValue,req,resp);
+                }
+
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-
 
 
     }

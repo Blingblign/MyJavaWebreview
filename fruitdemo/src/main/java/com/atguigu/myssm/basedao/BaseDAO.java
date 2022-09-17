@@ -113,7 +113,7 @@ public abstract class BaseDAO<T> {
             if(field!=null){
                 field.setAccessible(true);
                 field.set(obj,propertyValue);
-                
+
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
