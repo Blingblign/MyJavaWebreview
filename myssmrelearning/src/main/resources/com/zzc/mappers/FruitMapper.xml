@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzc.mappers.FruitMapper">
+    <!--int insertFruit();-->
+    <insert id="insertFruit">
+        insert into t_fruit values(null,"橘子",6,225,"橘子新鲜富含维生素C!!!");
+    </insert>
+    <delete id="deleteFruit">
+        delete from t_fruit where id = 4;
+    </delete>
+    <select id="getFruitByName" resultType="com.zzc.pojo.Fruit">
+        select fid,f_name as fname from t_fruit where f_name = '${abc}';
+    </select>
+</mapper>
